@@ -1,4 +1,22 @@
 #! /bin/bash
 set -euo pipefail
 
-curl -sfL https://get.k3s.io | tee k3s.sh | sha256sum -c <(echo "3798b669b3ede25b2d3bfb9039a744604efb3681a351b2c1e0b01b7b05f0a434  -") && cat k3s.sh | sh - && rm k3s.sh || echo "failed hash check"
+export GITHUB_URL="https://raw.githubusercontent.com/k3s-io/k3s"
+export COMMIT_HASH="19fd7e38f674bddaa4571373d767c48bc52867f0"
+
+sha256sum -c get_k3s.sh.sha256 || exit 1
+
+echo 'bd16f2905a364da5e9d18ff7624408a49b24c91f136045d97c3000c4a26acf58  install.sh.sha256' >> get_k3s.sh.sha256
+curl -sfL $GITHUB_URL/$COMMIT_HASH/install.sh.sha256sum > install.sh.sha256
+sha256sum -c get_k3s.sh.sha256 || exit 1
+
+cat install.sh.sha256 >> get_k3s.sh.sha256
+
+curl -sfL $GITHUB_URL/$COMMIT_HASH/install.sh > install.sh
+sha256sum -c get_k3s.sh.sha256 || exit 1
+
+cat install.sh | sh - || exit 1
+
+rm -f install.sh
+rm -f install.sh.sha256
+sha256sum get_k3s.sh > get_k3s.sh.sha256
