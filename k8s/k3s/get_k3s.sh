@@ -15,7 +15,7 @@ cat install.sh.sha256 >> get_k3s.sh.sha256
 curl -sfL $GITHUB_URL/$COMMIT_HASH/install.sh > install.sh
 sha256sum -c get_k3s.sh.sha256 || exit 1
 
-INSTALL_K3S_VERSION="$INSTALL_K3S_VERSION" cat install.sh | INSTALL_K3S_VERSION="$INSTALL_K3S_VERSION" sh - || exit 1
+INSTALL_K3S_VERSION="$INSTALL_K3S_VERSION" INSTALL_K3S_SKIP_START=true INSTALL_K3S_SKIP_ENABLE=true cat install.sh | INSTALL_K3S_SKIP_START=true INSTALL_K3S_SKIP_ENABLE=true INSTALL_K3S_VERSION="$INSTALL_K3S_VERSION" sh - || exit 1
 
 rm -f install.sh
 rm -f install.sh.sha256
